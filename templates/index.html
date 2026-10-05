@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MAHIR Account Generator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0a0e1a 0%, #131a2c 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    width: 100%;
+    max-width: 720px;
+    background: rgba(20, 27, 45, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 18px;
+    padding: 36px 32px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(90deg, #22d3ee, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 30px;
+  }
+  .field {
+    margin-bottom: 22px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 13px 15px;
+    background: rgba(10, 15, 26, 0.9);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-size: 14px;
+    transition: all 0.2s;
+    outline: none;
+  }
+  input:focus {
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+  }
+  .hint {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 6px;
+  }
+  .buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .btn-start {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+  }
+  .btn-start:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+  }
+  .btn-stop {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+  }
+  .btn-stop:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
+  }
+  .btn-download {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    display: none;
+    margin-top: 22px;
+    width: 100%;
+  }
+  .btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+  }
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 26px;
+  }
+  .stat {
+    background: rgba(10, 15, 26, 0.85);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .stat-value.green { color: #10b981; }
+  .stat-value.red   { color: #ef4444; }
+  .stat-value.cyan  { color: #22d3ee; }
+  .log {
+    margin-top: 20px;
+    background: #05080f;
+    border: 1px solid rgba(99, 179, 237, 0.1);
+    border-radius: 10px;
+    padding: 14px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-family: 'Consolas', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .log-line { color: #94a3b8; }
+  .log-line.success { color: #10b981; }
+  .log-line.error   { color: #ef4444; }
+  .log-line.warning { color: #f59e0b; }
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .status-idle    { background: #334155; color: #cbd5e1; }
+  .status-running { background: #065f46; color: #6ee7b7; }
+  .status-stopped { background: #7f1d1d; color: #fca5a5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⚡ MAHIR ACCOUNT GENERATOR
+    <span id="statusBadge" class="status-badge status-idle">IDLE</span>
+  </h1>
+  <p class="subtitle">Garena Free Fire Account Generator — Async Engine</p>
+
+  <div class="field">
+    <label for="nickname">Nickname (Optional)</label>
+    <input type="text" id="nickname" placeholder="Leave blank → MAHIR⁰¹²³ auto" />
+    <div class="hint">খালি রাখলে ডিফল্ট নাম MAHIR + random suffix হবে</div>
+  </div>
+
+  <div class="field">
+    <label for="workers">Workers (Parallel)</label>
+    <input type="number" id="workers" value="20" min="1" max="100" />
+  </div>
+
+  <div class="buttons">
+    <button id="btnStart" class="btn-start" onclick="startGeneration()">▶ START</button>
+    <button id="btnStop" class="btn-stop" onclick="stopGeneration()" disabled>■ STOP</button>
+  </div>
+
+  <button id="btnDownload" class="btn-download" onclick="downloadJson()">
+    ⬇ DOWNLOAD accounts-bd.json
+  </button>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Success</div>
+      <div class="stat-value green" id="statSuccess">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Failed</div>
+      <div class="stat-value red" id="statFail">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Total</div>
+      <div class="stat-value cyan" id="statTotal">0</div>
+    </div>
+  </div>
+
+  <div class="log" id="logBox">
+    <div class="log-line">Waiting to start...</div>
+  </div>
+</div>
+
+<script>
+  let pollTimer = null;
+
+  async function startGeneration() {
+    const nickname = document.getElementById('nickname').value.trim();
+    const workers  = parseInt(document.getElementById('workers').value) || 20;
+
+    document.getElementById('btnStart').disabled = true;
+    document.getElementById('btnStop').disabled  = false;
+    document.getElementById('btnDownload').style.display = 'none';
+    setStatus('running', 'RUNNING');
+    logLine('▶ Generation started', 'success');
+
+    try {
+      const res = await fetch('/api/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickname, workers })
+      });
+      const data = await res.json();
+      if (!data.ok) logLine('❌ ' + (data.error || 'Failed to start'), 'error');
+    } catch (e) {
+      logLine('❌ Network error: ' + e, 'error');
+      document.getElementById('btnStart').disabled = false;
+      document.getElementById('btnStop').disabled  = true;
+    }
+
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(pollStats, 1000);
+  }
+
+  async function stopGeneration() {
+    document.getElementById('btnStop').disabled = true;
+    logLine('⏸ Stopping…', 'warning');
+
+    try {
+      const res = await fetch('/api/stop', { method: 'POST' });
+      const data = await res.json();
+      logLine('■ Generation stopped', 'warning');
+      setStatus('stopped', 'STOPPED');
+      document.getElementById('btnDownload').style.display = 'block';
+    } catch (e) {
+      logLine('❌ Stop failed: ' + e, 'error');
+    }
+
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    await pollStats();
+  }
+
+  async function pollStats() {
+    try {
+      const res = await fetch('/api/stats');
+      const data = await res.json();
+
+      document.getElementById('statSuccess').textContent = data.success;
+      document.getElementById('statFail').textContent    = data.fail;
+      document.getElementById('statTotal').textContent   = data.total;
+
+      const logBox = document.getElementById('logBox');
+      logBox.innerHTML = data.logs
+        .map(l => `<div class="log-line ${l.level}">${escapeHtml(l.msg)}</div>`)
+        .join('');
+      logBox.scrollTop = logBox.scrollHeight;
+
+      if (!data.running && document.getElementById('btnStop').disabled === false) {
+        document.getElementById('btnStart').disabled = false;
+        document.getElementById('btnStop').disabled  = true;
+        setStatus('stopped', 'STOPPED');
+        document.getElementById('btnDownload').style.display = 'block';
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function downloadJson() {
+    window.location.href = '/api/download';
+  }
+
+  function setStatus(cls, text) {
+    const el = document.getElementById('statusBadge');
+    el.className = 'status-badge status-' + cls;
+    el.textContent = text;
+  }
+
+  function logLine(msg, level = 'info') {
+    const logBox = document.getElementById('logBox');
+    const div = document.createElement('div');
+    div.className = 'log-line ' + level;
+    div.textContent = msg;
+    logBox.appendChild(div);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+</script>
+</body>
+</html>
