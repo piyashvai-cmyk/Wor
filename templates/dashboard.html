@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · MAHIR ID Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #08090f;
+    --bg-1: #0f1119;
+    --bg-2: #161a26;
+    --card: rgba(22, 26, 38, 0.7);
+    --card-hi: rgba(30, 36, 52, 0.85);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hi: rgba(255, 255, 255, 0.16);
+    --text-0: #f5f7ff;
+    --text-1: #a8b0c2;
+    --text-2: #6b7385;
+    --accent: #ffb02e;
+    --accent-hi: #ffd166;
+    --accent-glow: rgba(255, 176, 46, 0.4);
+    --danger: #ff4d6d;
+    --success: #22e5a5;
+    --info: #38bdf8;
+    --owner: #ec4899;
+    --user: #06b6d4;
+    --radius: 12px;
+    --radius-lg: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-0);
+    color: var(--text-0);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(255, 107, 53, 0.08), transparent 40%),
+      radial-gradient(circle at 85% 100%, rgba(79, 70, 229, 0.08), transparent 40%);
+    background-attachment: fixed;
+  }
+
+  /* ─── Scrollbar ─── */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+  /* ─── Layout ─── */
+  .app {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 24px 60px;
+  }
+
+  /* ─── Topbar ─── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--card);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .brand-logo {
+    width: 40px; height: 40px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #ff6b35, #ffb02e 50%, #ffd166);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px -6px var(--accent-glow);
+    flex-shrink: 0;
+  }
+  .brand-logo svg { width: 22px; height: 22px; color: #0a0a0a; }
+  .brand-txt h1 {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .brand-txt p {
+    font-size: 11px;
+    color: var(--text-2);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand-txt p .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: pulseDot 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%,100% { opacity: 1; }
+    50%     { opacity: 0.4; }
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 12px 7px 8px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .user-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .user-pill.owner .user-avatar { background: linear-gradient(135deg, var(--owner), #be185d); }
+  .user-pill.user  .user-avatar { background: linear-gradient(135deg, var(--user), #0891b2); }
+
+  .btn {
+    padding: 9px 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-0);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .btn svg { width: 15px; height: 15px; }
+  .btn:hover { background: rgba(255,255,255,0.08); border-color: var(--border-hi); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff6b35, #ffb02e);
+    color: #0a0a0a;
+    border-color: transparent;
+    box-shadow: 0 8px 22px -8px var(--accent-glow);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -8px var(--accent-glow); background: linear-gradient(135deg, #ff7a45, #ffbe3d); }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ff4d6d, #dc2626);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 8px 22px -8px rgba(255,77,109,0.5);
+  }
+  .btn-danger:hover { transform: translateY(-1px); }
+  .btn-danger:disabled { background: rgba(255,255,255,0.05); color: var(--text-2); box-shadow: none; }
+
+  .btn-ghost { background: transparent; }
+
+  /* ─── Stats ─── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    padding: 18px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(16px);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+  .stat-card:hover {
+    border-color: var(--border-hi);
+    transform: translateY(-2px);
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .stat-card.total::after  { background: var(--info); }
+  .stat-card.success::after { background: var(--success); }
+  .stat-card.failed::after  { background: var(--danger); }
+  .stat-card.status::after  { background: var(--accent); }
+
+  .stat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .stat-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+  }
+  .stat-icon svg { width: 17px; height: 17px; }
+  .stat-card.total .stat-icon svg   { color: var(--info); }
+  .stat-card.success .stat-icon svg { color: var(--success); }
+  .stat-card.failed .stat-icon svg  { color: var(--danger); }
+  .stat-card.status .stat-icon svg  { color: var(--accent); }
+
+  .stat-value {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .status-badge .led {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--text-2);
+  }
+  .status-badge.running { color: var(--success); }
+  .status-badge.running .led { background: var(--success); box-shadow: 0 0 10px var(--success); animation: pulseDot 1.2s ease-in-out infinite; }
+  .status-badge.idle { color: var(--text-1); }
+
+  /* ─── Tabs ─── */
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .tab-bar button {
+    padding: 9px 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-1);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .tab-bar button svg { width: 15px; height: 15px; }
+  .tab-bar button.active {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-0);
+    box-shadow: 0 0 0 1px var(--border-hi) inset;
+  }
+  .tab-bar button:hover:not(.active) { color: var(--text-0); }
+
+  .tab-panel { display: none; animation: fadeIn 0.3s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Grid ─── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 16px;
+  }
+  @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-0);
+  }
+  .card-title svg { width: 17px; height: 17px; color: var(--accent); }
+  .card-body { padding: 20px; }
+
+  /* ─── Form ─── */
+  .field { margin-bottom: 15px; }
+  .field label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
+    color: var(--text-0);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+    background: rgba(0,0,0,0.45);
+    box-shadow: 0 0 0 4px rgba(255,176,46,0.12);
+  }
+  .field input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .field .hint {
+    font-size: 11px;
+    color: var(--text-2);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .field .hint svg { width: 12px; height: 12px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+
+  /* ─── Log ─── */
+  .log-view {
+    background: #05060a;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    max-height: 340px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+  }
+  .log-line { display: flex; gap: 10px; padding: 2px 0; }
+  .log-line .t { color: var(--text-2); flex-shrink: 0; }
+  .log-line .m { word-break: break-word; }
+  .log-line.success .m { color: var(--success); }
+  .log-line.error   .m { color: #ff8fa8; }
+  .log-line.warning .m { color: var(--accent); }
+  .log-line.info    .m { color: var(--info); }
+
+  /* ─── Code preview ─── */
+  .code-view {
+    background: #05060a;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.6;
+    max-height: 340px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    color: #b8c2d9;
+    white-space: pre;
+    tab-size: 2;
+  }
+  .code-view:empty::before { content: '// No data yet'; color: var(--text-2); }
+
+  /* ─── Action row ─── */
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .actions .btn { flex: 0 1 auto; }
+
+  /* ─── Sessions list ─── */
+  .sessions-list { display: flex; flex-direction: column; gap: 10px; }
+  .session-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+  .session-row:hover {
+    border-color: var(--border-hi);
+    background: rgba(0,0,0,0.4);
+  }
+  .session-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255,176,46,0.15), rgba(255,107,53,0.15));
+    border: 1px solid rgba(255,176,46,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .session-icon svg { width: 20px; height: 20px; color: var(--accent); }
+
+  .session-info { flex: 1; min-width: 0; }
+  .session-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 4px;
+    word-break: break-all;
+  }
+  .session-meta {
+    font-size: 11.5px;
+    color: var(--text-2);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .session-meta span { display: inline-flex; align-items: center; gap: 5px; }
+  .session-meta svg { width: 12px; height: 12px; }
+
+  .session-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .icon-btn {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .icon-btn svg { width: 15px; height: 15px; }
+  .icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-0); border-color: var(--border-hi); }
+  .icon-btn.danger:hover { background: rgba(255,77,109,0.15); border-color: rgba(255,77,109,0.35); color: #ff8fa8; }
+  .icon-btn.primary:hover { background: rgba(56,189,248,0.15); border-color: rgba(56,189,248,0.35); color: var(--info); }
+
+  /* ─── Empty state ─── */
+  .empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-2);
+    font-size: 13px;
+  }
+  .empty svg {
+    width: 44px; height: 44px;
+    margin-bottom: 12px;
+    opacity: 0.35;
+    color: var(--accent);
+  }
+
+  /* ─── Toasts ─── */
+  .toasts {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    max-width: 380px;
+  }
+  .toast {
+    padding: 13px 16px;
+    border-radius: 11px;
+    background: rgba(22,26,38,0.95);
+    border: 1px solid var(--border-hi);
+    backdrop-filter: blur(20px);
+    font-size: 13.5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    box-shadow: 0 20px 40px -12px rgba(0,0,0,0.6);
+    pointer-events: auto;
+    animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .toast svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .toast.success { border-color: rgba(34,229,165,0.35); }
+  .toast.success svg { color: var(--success); }
+  .toast.error   { border-color: rgba(255,77,109,0.35); }
+  .toast.error   svg { color: var(--danger); }
+  .toast.info    { border-color: rgba(56,189,248,0.35); }
+  .toast.info    svg { color: var(--info); }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .toast.out { animation: toastOut 0.3s ease forwards; }
+  @keyframes toastOut {
+    to { opacity: 0; transform: translateX(40px); }
+  }
+
+  /* ─── Spinner ─── */
+  .spin {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 640px) {
+    .app { padding: 14px; }
+    .topbar { padding: 12px 14px; }
+    .brand-txt h1 { font-size: 14px; }
+    .stat-value { font-size: 24px; }
+    .card-head, .card-body { padding: 14px; }
+    .tab-bar button { padding: 8px 13px; font-size: 12.5px; }
+    .tab-bar button span { display: none; }
+    .tab-bar button svg { width: 17px; height: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toasts" id="toasts"></div>
+
+<div class="app">
+
+  <!-- ═══ TOPBAR ═══ -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div class="brand-txt">
+        <h1>MAHIR ID Generator</h1>
+        <p><span class="dot"></span>OB55 · BD Server · v2.132.8</p>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="user-pill" id="userPill">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span id="userName">…</span>
+      </div>
+      <button class="btn" onclick="logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STATS ═══ -->
+  <div class="stats">
+    <div class="stat-card total">
+      <div class="stat-head">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-value" id="statTotal">0</div>
+      <div class="stat-label">Total Accounts</div>
+    </div>
+
+    <div class="stat-card success">
+      <div class="stat-head">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-value" id="statSuccess">0</div>
+      <div class="stat-label">Success</div>
+    </div>
+
+    <div class="stat-card failed">
+      <div class="stat-head">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-value" id="statFail">0</div>
+      <div class="stat-label">Failed</div>
+    </div>
+
+    <div class="stat-card status">
+      <div class="stat-head">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-value"><span class="status-badge idle" id="runStatus"><span class="led"></span>IDLE</span></div>
+      <div class="stat-label">Generator Status</div>
+    </div>
+  </div>
+
+  <!-- ═══ TABS ═══ -->
+  <div class="tab-bar">
+    <button class="active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Dashboard</span>
+    </button>
+    <button data-tab="json">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
+      </svg>
+      <span>JSON Data</span>
+    </button>
+    <button data-tab="logs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+      <span>Live Logs</span>
+    </button>
+    <button data-tab="sessions" id="tabSessionsBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span>All Sessions</span>
+    </button>
+  </div>
+
+  <!-- ═══ TAB: DASHBOARD ═══ -->
+  <div class="tab-panel active" data-panel="dashboard">
+    <div class="grid-2">
+
+      <!-- LEFT: Controls -->
+      <div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Generation Settings
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field">
+              <label for="nickname">Nickname Prefix <span id="ownerOnly1" style="color:var(--owner);font-size:10px;margin-left:5px;">OWNER ONLY</span></label>
+              <input type="text" id="nickname" value="MAHIR" maxlength="20">
+              <div class="hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="16" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                Accounts will be named like: <code style="color:var(--accent);font-family:'JetBrains Mono',monospace;">MAHIR⁰¹²³</code>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="bio">In-Game Bio <span id="ownerOnly2" style="color:var(--owner);font-size:10px;margin-left:5px;">OWNER ONLY</span></label>
+              <input type="text" id="bio" value="[C][B]WEB : MAHIR.XO.JE [FFD700]TG : MAHIR0208" maxlength="300">
+            </div>
+
+            <div class="field">
+              <label for="workers">Concurrent Workers (1–100)</label>
+              <input type="number" id="workers" value="20" min="1" max="100">
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;">
+              <button class="btn btn-primary" id="btnStart" onclick="startGen()" style="flex:1;justify-content:center;padding:13px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Start Generation
+              </button>
+              <button class="btn btn-danger" id="btnStop" onclick="stopGen()" style="flex:1;justify-content:center;padding:13px;display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="6" y="6" width="12" height="12" rx="1"/>
+                </svg>
+                Stop & Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              Current Session
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field" style="margin-bottom:10px;">
+              <label>Session File</label>
+              <input type="text" id="sessionFile" disabled value="—">
+            </div>
+            <div class="actions">
+              <button class="btn" onclick="copyJson()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy JSON
+              </button>
+              <button class="btn" onclick="downloadCurrent()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download
+              </button>
+              <button class="btn" onclick="refreshJson()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 4 23 10 17 10"/>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Live log -->
+      <div>
+        <div class="card" style="height:100%;display:flex;flex-direction:column;">
+          <div class="card-head">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              Live Activity
+            </div>
+            <span class="status-badge idle" id="runStatus2"><span class="led"></span>IDLE</span>
+          </div>
+          <div class="card-body" style="flex:1;">
+            <div class="log-view" id="logView">
+              <div class="log-line info"><span class="t">--:--:--</span><span class="m">Waiting for generation to start…</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ TAB: JSON ═══ -->
+  <div class="tab-panel" data-panel="json">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+          JSON Data Viewer
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="copyJson()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy
+          </button>
+          <button class="btn btn-primary" onclick="downloadCurrent()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download JSON
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="code-view" id="jsonView"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: LOGS ═══ -->
+  <div class="tab-panel" data-panel="logs">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          Full Log History
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="log-view" id="logView2" style="max-height:600px;">
+          <div class="log-line info"><span class="t">--:--:--</span><span class="m">No logs yet</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: SESSIONS ═══ -->
+  <div class="tab-panel" data-panel="sessions">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          All Saved Sessions
+        </div>
+        <button class="btn" onclick="loadOwnerFiles()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="sessions-list" id="ownerFiles">
+          <div class="empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            <div>Owner only — nothing to show</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let me = null;
+let isRunning = false;
+let pollTimer = null;
+let currentJsonData = [];
+let currentJsonFile = '';
+
+/* ─── Toast system ─── */
+function toast(msg, type='info', ms=3000) {
+  const box = document.getElementById('toasts');
+  const icons = {
+    success: '<polyline points="20 6 9 17 4 12"/>',
+    error:   '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+    info:    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+  };
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${icons[type]||icons.info}</svg><div>${msg}</div>`;
+  box.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 300); }, ms);
+}
+
+/* ─── Tabs ─── */
+document.querySelectorAll('.tab-bar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-bar button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    if (btn.dataset.tab === 'sessions' && me?.role === 'owner') loadOwnerFiles();
+  });
+});
+
+/* ─── Init ─── */
+async function init() {
+  const res = await fetch('/api/me');
+  if (!res.ok) { window.location.href = '/'; return; }
+  me = await res.json();
+
+  // User pill
+  const pill = document.getElementById('userPill');
+  const av = document.getElementById('userAvatar');
+  pill.className = 'user-pill ' + me.role;
+  av.textContent = (me.username[0] || '?').toUpperCase();
+  document.getElementById('userName').textContent = me.username;
+
+  // Lock user fields
+  if (me.role !== 'owner') {
+    document.getElementById('nickname').disabled = true;
+    document.getElementById('bio').disabled = true;
+    document.getElementById('ownerOnly1').style.display = 'none';
+    document.getElementById('ownerOnly2').style.display = 'none';
+  } else {
+    // Show owner-only tab
+    document.getElementById('tabSessionsBtn').style.display = 'inline-flex';
+  }
+
+  refreshJson();
+  tick();
+  pollTimer = setInterval(tick, 2000);
+}
+
+/* ─── Poll ─── */
+async function tick() {
+  try {
+    const res = await fetch('/api/stats');
+    if (!res.ok) return;
+    const d = await res.json();
+
+    isRunning = d.running;
+    document.getElementById('statTotal').textContent   = d.total;
+    document.getElementById('statSuccess').textContent = d.success;
+    document.getElementById('statFail').textContent    = d.fail;
+    document.getElementById('sessionFile').value       = d.session_file || '—';
+
+    // Status badge
+    const s1 = document.getElementById('runStatus');
+    const s2 = document.getElementById('runStatus2');
+    const cls = d.running ? 'status-badge running' : 'status-badge idle';
+    const txt = d.running ? 'RUNNING' : 'IDLE';
+    s1.className = cls; s1.innerHTML = `<span class="led"></span>${txt}`;
+    s2.className = cls; s2.innerHTML = `<span class="led"></span>${txt}`;
+
+    document.getElementById('btnStart').style.display = d.running ? 'none' : 'inline-flex';
+    document.getElementById('btnStop').style.display  = d.running ? 'inline-flex' : 'none';
+
+    // Logs
+    const html = d.logs.map(l =>
+      `<div class="log-line ${l.level}"><span class="t">${l.t}</span><span class="m">${esc(l.msg)}</span></div>`
+    ).join('') || '<div class="log-line info"><span class="t">--:--:--</span><span class="m">No activity yet</span></div>';
+
+    const lv = document.getElementById('logView');
+    lv.innerHTML = html;
+    lv.scrollTop = lv.scrollHeight;
+
+    const lv2 = document.getElementById('logView2');
+    lv2.innerHTML = html;
+    lv2.scrollTop = lv2.scrollHeight;
+  } catch (e) {}
+}
+
+function esc(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ─── Actions ─── */
+async function startGen() {
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/start', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        nickname: document.getElementById('nickname').value.trim(),
+        bio:      document.getElementById('bio').value.trim(),
+        workers:  parseInt(document.getElementById('workers').value) || 20,
+      })
+    });
+    const d = await res.json();
+    if (!d.ok) toast(d.error || 'Failed to start', 'error');
+    else { toast(`Started ${d.workers} workers`, 'success'); refreshJson(); }
+  } catch (e) { toast('Network error', 'error'); }
+  btn.disabled = false;
+  tick();
+}
+
+async function stopGen() {
+  const btn = document.getElementById('btnStop');
+  btn.disabled = true;
+  try {
+    await fetch('/api/stop', {method:'POST'});
+    toast('Generation stopped & saved', 'info');
+    await refreshJson();
+  } catch (e) { toast('Network error', 'error'); }
+  btn.disabled = false;
+  tick();
+}
+
+async function refreshJson() {
+  try {
+    const res = await fetch('/api/current');
+    const d = await res.json();
+    if (!d.ok) return;
+    currentJsonData = d.accounts || [];
+    currentJsonFile = d.file || '';
+
+    const jv = document.getElementById('jsonView');
+    if (!currentJsonData.length) {
+      jv.textContent = '// No accounts generated yet\n// File: ' + (currentJsonFile || '—');
+    } else {
+      jv.textContent = JSON.stringify(currentJsonData, null, 2);
+    }
+  } catch (e) {}
+}
+
+function copyJson() {
+  if (!currentJsonData.length) return toast('No data to copy', 'error');
+  const text = JSON.stringify(currentJsonData, null, 2);
+  navigator.clipboard.writeText(text)
+    .then(() => toast(`Copied ${currentJsonData.length} accounts`, 'success'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      toast(`Copied ${currentJsonData.length} accounts`, 'success');
+    });
+}
+
+function downloadCurrent() {
+  if (!currentJsonFile) return toast('No session file yet', 'error');
+  window.location.href = '/api/download?file=' + encodeURIComponent(currentJsonFile);
+  toast('Download started', 'info');
+}
+
+/* ─── Owner ─── */
+async function loadOwnerFiles() {
+  const box = document.getElementById('ownerFiles');
+  if (!me || me.role !== 'owner') {
+    box.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><div>Owner only</div></div>';
+    return;
+  }
+  box.innerHTML = '<div class="empty"><div class="spin" style="color:var(--accent);width:24px;height:24px;border-width:3px;"></div></div>';
+
+  try {
+    const res = await fetch('/api/owner/list');
+    const d = await res.json();
+    if (!d.ok) { box.innerHTML = '<div class="empty">Error loading sessions</div>'; return; }
+
+    if (!d.files.length) {
+      box.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><div>No sessions generated yet</div></div>';
+      return;
+    }
+
+    box.innerHTML = d.files.map(f => `
+      <div class="session-row">
+        <div class="session-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="session-info">
+          <div class="session-name">${f.filename}</div>
+          <div class="session-meta">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              ${f.count} accounts
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+              ${(f.size/1024).toFixed(1)} KB
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ${f.modified.slice(0,19).replace('T',' ')}
+            </span>
+          </div>
+        </div>
+        <div class="session-actions">
+          <button class="icon-btn primary" onclick="viewOwnerFile('${f.filename}')" title="View">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+          <button class="icon-btn" onclick="downloadOwnerFile('${f.filename}')" title="Download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+          <button class="icon-btn danger" onclick="deleteOwnerFile('${f.filename}')" title="Delete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    box.innerHTML = '<div class="empty">Network error</div>';
+  }
+}
+
+async function viewOwnerFile(fname) {
+  const res = await fetch('/api/owner/view?file=' + encodeURIComponent(fname));
+  const d = await res.json();
+  if (!d.ok) return toast('Failed to load', 'error');
+  currentJsonData = d.accounts;
+  currentJsonFile = d.file;
+  document.getElementById('jsonView').textContent = JSON.stringify(d.accounts, null, 2);
+  document.querySelector('.tab-bar button[data-tab="json"]').click();
+  toast(`Loaded ${d.count} accounts`, 'success');
+}
+
+function downloadOwnerFile(fname) {
+  window.location.href = '/api/download?file=' + encodeURIComponent(fname);
+  toast('Download started', 'info');
+}
+
+async function deleteOwnerFile(fname) {
+  if (!confirm(`Delete ${fname}?\nThis cannot be undone.`)) return;
+  await fetch('/api/owner/delete', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({file: fname})
+  });
+  toast('File deleted', 'info');
+  loadOwnerFiles();
+}
+
+async function logout() {
+  await fetch('/api/logout', {method:'POST'});
+  window.location.href = '/';
+}
+
+init();
+</script>
+</body>
+</html>
